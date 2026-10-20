@@ -1,0 +1,113 @@
+<?php
+
+declare(strict_types=1);
+
+namespace AllyMailer\Api\Webhook\Model;
+
+use AllyMailer\Client\Data;
+
+/**
+ * Об'єкт з усіма властивостями webhook.
+ */
+final class WebhookObject implements \JsonSerializable
+{
+    public function __construct(
+        /**
+         * Унікальний ідентифікатор webhook.
+         */
+        public ?int $id = null,
+        /**
+         * URL webhook.
+         */
+        public ?string $url = null,
+        /**
+         * Статус webhook, за замовчуванням "active". Статус "disabled" означає, що webhook було вимкнено користувачем,
+         * "stopped" означає, що webhook було зупинено системою після 24 годин невдалих викликів (мінімум за 10 різними
+         * подіями).
+         * За замовчуванням: `active`.
+         */
+        public WebhookStatus|string|null $status = null,
+        /**
+         * Формат сповіщень. "json_post"(за замовчуванням) або "json_post_gzip".
+         * За замовчуванням: `json_post`.
+         */
+        public WebhookEventFormat|string|null $eventFormat = null,
+        /**
+         * Повертати (1) чи ні (0) докладну інформацію про доставку. Якщо delivery_info=1, повертається додаткова
+         * інформація про відповідь сервера та внутрішній статус доставки в разі статусів доставки "hard_bounced" і
+         * "soft_bounced"; user agent, IP-адреса отримувача, геодані, визначена за user agent інформація про пристрій
+         * (тип і марка пристрою, назва ОС, браузера або поштового клієнта) і traffic_type (human, machine, protected або
+         * unknown) в разі статусів "opened" і "clicked"; URL для статусу "clicked". Для статусів "delivered",
+         * "soft_bounced" і "hard_bounced" AllyMailer також може повернути sender_ip — IP-адресу SMTP-сервера, з якого
+         * було надіслано лист, якщо він доступний.
+         * Допустимі значення: `0`, `1`.
+         * За замовчуванням: `0`.
+         */
+        public ?int $deliveryInfo = null,
+        /**
+         * 0=в одному виклику може надійти декілька подій, 1=лише одна подія на виклик (не рекомендується).
+         * Допустимі значення: `0`, `1`.
+         * За замовчуванням: `0`.
+         */
+        public ?int $singleEvent = null,
+        /**
+         * Максимальна кількість дозволених паралельних запитів до вашого сервера. Чим більше ваш сервер може обробити —
+         * тим краще.
+         * За замовчуванням: `10`.
+         */
+        public ?int $maxParallel = null,
+        /**
+         * Час останнього оновлення властивостей webhook у часовому поясі UTC у форматі "РРРР-ММ-ДД гг:хх:сс".
+         */
+        public ?string $updatedAt = null,
+        /**
+         * Об'єкт, що описує події, про які потрібно сповіщати.
+         */
+        public ?WebhookEventsObject $events = null,
+    ) {
+    }
+
+    /**
+     * @param array<string, mixed> $data Decoded JSON.
+     */
+    public static function fromArray(array $data): self
+    {
+        return new self(
+            id: Data::int($data['id'] ?? null),
+            url: Data::string($data['url'] ?? null),
+            status: Data::enum(WebhookStatus::class, Data::string($data['status'] ?? null)),
+            eventFormat: Data::enum(WebhookEventFormat::class, Data::string($data['event_format'] ?? null)),
+            deliveryInfo: Data::int($data['delivery_info'] ?? null),
+            singleEvent: Data::int($data['single_event'] ?? null),
+            maxParallel: Data::int($data['max_parallel'] ?? null),
+            updatedAt: Data::string($data['updated_at'] ?? null),
+            events: Data::model(WebhookEventsObject::class, $data['events'] ?? null),
+        );
+    }
+
+    /**
+     * @return array<string, mixed> JSON-ready array: null fields are omitted, empty objects are \stdClass.
+     */
+    public function toArray(): array
+    {
+        return \array_filter([
+            'id' => $this->id,
+            'url' => $this->url,
+            'status' => Data::value($this->status),
+            'event_format' => Data::value($this->eventFormat),
+            'delivery_info' => $this->deliveryInfo,
+            'single_event' => $this->singleEvent,
+            'max_parallel' => $this->maxParallel,
+            'updated_at' => $this->updatedAt,
+            'events' => null === $this->events ? null : Data::object($this->events->toArray()),
+        ], static fn (mixed $value): bool => $value !== null);
+    }
+
+    /**
+     * @return array<string, mixed>|\stdClass JSON object: {} when empty.
+     */
+    public function jsonSerialize(): mixed
+    {
+        return Data::object($this->toArray());
+    }
+}

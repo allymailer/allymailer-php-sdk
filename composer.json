@@ -1,0 +1,35 @@
+{
+    "name": "allymailer/allymailer-sdk",
+    "version": "2.0.0",
+    "description": "AllyMailer Web API client library for PHP",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "allymailer",
+        "email",
+        "api",
+        "sdk"
+    ],
+    "homepage": "https://github.com/allymailer/allymailer-php-sdk",
+    "require": {
+        "php": ">=8.1",
+        "ext-curl": "*",
+        "ext-json": "*"
+    },
+    "suggest": {
+        "psr/http-client": "To send the requests with a PSR-18 client (Guzzle, ...) through Psr18Transport"
+    },
+    "autoload": {
+        "psr-4": {
+            "AllyMailer\\": "src/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "2.x-dev"
+        }
+    }
+}

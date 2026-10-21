@@ -13,7 +13,7 @@ use AllyMailer\Client\Transport\TransportInterface;
 final class ApiClient
 {
     /** The SDK and its version in the "platform" query parameter of every request. */
-    public const PLATFORM = 'php-sdk.1.0.0';
+    public const PLATFORM = 'php-sdk.1.1.1';
 
     /** @var Configuration */
     private $config;

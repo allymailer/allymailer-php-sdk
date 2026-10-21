@@ -20,7 +20,7 @@ final class MessageObjectRecipientsItem implements \JsonSerializable
 
     /**
      * Об'єкт, що описує підстановки для конкретного отримувача (наприклад, ім'я, товар для показу саме цьому
-     * отримувачу — див. [Шаблонізатори](https://docs.allymailer.com.ua/en/template-engines)). Підстановки працюють у
+     * отримувачу — див. [Шаблонізатори](https://docs.allymailer.com.ua/ua/template-engines)). Підстановки працюють у
      * параметрах:
      *
      * - body.html
@@ -90,7 +90,7 @@ final class MessageObjectRecipientsItem implements \JsonSerializable
 
     /**
      * Об'єкт, що описує підстановки для конкретного отримувача (наприклад, ім'я, товар для показу саме цьому
-     * отримувачу — див. [Шаблонізатори](https://docs.allymailer.com.ua/en/template-engines)).
+     * отримувачу — див. [Шаблонізатори](https://docs.allymailer.com.ua/ua/template-engines)).
      *
      * @return array<string, string>|null
      */
@@ -101,7 +101,7 @@ final class MessageObjectRecipientsItem implements \JsonSerializable
 
     /**
      * Об'єкт, що описує підстановки для конкретного отримувача (наприклад, ім'я, товар для показу саме цьому
-     * отримувачу — див. [Шаблонізатори](https://docs.allymailer.com.ua/en/template-engines)).
+     * отримувачу — див. [Шаблонізатори](https://docs.allymailer.com.ua/ua/template-engines)).
      *
      * @param array<string, string>|null $substitutions
      *
@@ -137,6 +137,43 @@ final class MessageObjectRecipientsItem implements \JsonSerializable
     {
         $this->metadata = $metadata;
 
+        return $this;
+    }
+
+    /**
+     * A recipient from "email" or "Name <email>": the name goes to the to_name substitution (the name in the "To"
+     * header).
+     *
+     * @param array<string, string>|null $substitutions More substitutions of the recipient.
+     */
+    public static function fromAddress(string $address, ?array $substitutions = null): self
+    {
+        $email = \trim($address);
+        $name = '';
+        if (\preg_match('/^(.*)<([^>]+)>$/s', $email, $match) === 1) {
+            $email = \trim($match[2]);
+            $name = \trim(\trim($match[1]), '"');
+        }
+        if ($name !== '') {
+            $substitutions = ($substitutions ?? []) + ['to_name' => $name];  // an explicit to_name wins
+        }
+
+        $recipient = new self($email);
+        if ($substitutions !== null) {
+            $recipient->setSubstitutions($substitutions);
+        }
+
+        return $recipient;
+    }
+
+    /**
+     * Sets the metadata of the recipient (returned in the webhook events of its email); fluent.
+     *
+     * @param array<string, string> $metadata
+     */
+    public function withMetadata(array $metadata): self
+    {
+        $this->setMetadata($metadata);
         return $this;
     }
 

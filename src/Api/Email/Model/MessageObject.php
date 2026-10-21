@@ -65,7 +65,7 @@ final class MessageObject implements \JsonSerializable
     private $globalLanguage;
 
     /**
-     * Параметр для вибору [шаблонізатора](https://docs.allymailer.com.ua/en/template-engines) — або "simple", або
+     * Параметр для вибору [шаблонізатора](https://docs.allymailer.com.ua/ua/template-engines) — або "simple", або
      * "velocity", або "liquid", або "none". За замовчуванням — "simple".
      * Значення: константи `TemplateEngine`.
      *
@@ -422,7 +422,7 @@ final class MessageObject implements \JsonSerializable
     }
 
     /**
-     * Параметр для вибору [шаблонізатора](https://docs.allymailer.com.ua/en/template-engines) — або "simple", або
+     * Параметр для вибору [шаблонізатора](https://docs.allymailer.com.ua/ua/template-engines) — або "simple", або
      * "velocity", або "liquid", або "none".
      *
      * @return string|null
@@ -433,7 +433,7 @@ final class MessageObject implements \JsonSerializable
     }
 
     /**
-     * Параметр для вибору [шаблонізатора](https://docs.allymailer.com.ua/en/template-engines) — або "simple", або
+     * Параметр для вибору [шаблонізатора](https://docs.allymailer.com.ua/ua/template-engines) — або "simple", або
      * "velocity", або "liquid", або "none".
      *
      * @param string|null $templateEngine Значення: константи `TemplateEngine`.

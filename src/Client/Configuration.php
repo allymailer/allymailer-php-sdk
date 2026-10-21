@@ -48,7 +48,7 @@ final class Configuration
         string $apiKey,
         string $baseUrl = self::DEFAULT_BASE_URL,
         float $timeout = 30.0,
-        string $userAgent = 'AllyMailer-php-client/1.1.1',
+        string $userAgent = 'AllyMailer-php-client/1.1.2',
         ?string $platform = null
     ) {
         $this->apiKey = $apiKey;

@@ -1,6 +1,6 @@
 {
     "name": "allymailer/allymailer-sdk",
-    "version": "2.1.1",
+    "version": "2.1.2",
     "description": "AllyMailer Web API client library for PHP",
     "type": "library",
     "license": "MIT",
